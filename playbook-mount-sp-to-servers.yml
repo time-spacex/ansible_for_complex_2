@@ -1,0 +1,6 @@
+- name: Mount sp2 dir to servers
+  hosts: sp2_mount_servers
+  become: yes
+
+  roles:
+    - role: mount-sp2-to-servers

@@ -1,0 +1,26 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for mount-sp2
+
+- name: Copy exports to /etc/exports
+  copy: src=exports dest=/etc/exports mode=0555
+
+- name: Check if directory /storage/disk-4/sp2 exists
+  ansible.builtin.stat:
+    path: /storage/disk-4/sp2
+  register: sp2_dir_stat
+
+- name: Create /storage/disk-4/sp2 if it does not exist
+  become: true
+  ansible.builtin.file:
+    path: /storage/disk-4/sp2
+    state: directory
+  when: not sp2_dir_stat.stat.exists
+
+- name: Export NFS shares
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      sudo exportfs -a
+      sudo systemctl restart nfs-kernel-server.service
+  when: sp2_dir_stat.stat.exists

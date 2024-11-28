@@ -1,0 +1,60 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for mount-sp2-to-servers
+- name: Install nfs common
+  become: true
+  ansible.builtin.apt:
+    name: nfs-common
+    state: latest
+
+- name: Check if directory /opt/krtm2/sp2 exists
+  ansible.builtin.stat:
+    path: /opt/krtm2/sp2
+  register: sp2_dir_stat
+
+- name: Create /opt/krtm2/sp2 if it does not exist
+  become: true
+  ansible.builtin.file:
+    path: /opt/krtm2/sp2
+    state: directory
+  when: not sp2_dir_stat.stat.exists
+
+- name: Mount directory from storage server
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      sudo mkdir /opt/krtm2/sp2
+      sudo mount {{ storage_server_IP }}:/storage/disk-4/sp2 /opt/krtm2/sp2
+
+- name: Ensure NFS entry exists in /etc/fstab
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    line: "{{ storage_server_IP }}:/storage/disk-4/sp2 /opt/krtm2/sp2 nfs auto 0 0"
+
+# mount ddz
+
+- name: Check if directory /opt/krtm2/ddz exists
+  ansible.builtin.stat:
+    path: /opt/krtm2/ddz
+  register: ddz_dir_stat
+
+- name: Create /opt/krtm2/ddz if it does not exist
+  become: true
+  ansible.builtin.file:
+    path: /opt/krtm2/ddz
+    state: directory
+  when: not ddz_dir_stat.stat.exists
+
+- name: Mount directory from storage server
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      sudo mkdir /opt/krtm2/ddz
+      sudo mount {{ storage_server_IP }}:/storage/disk-2 /opt/krtm2/ddz
+
+- name: Ensure NFS entry exists in /etc/fstab
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    line: "{{ storage_server_IP }}:/storage/disk-2 /opt/krtm2/ddz nfs auto 0 0"

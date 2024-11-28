@@ -1,0 +1,6 @@
+- name: Mount sp2 dir on a storage server
+  hosts: storage_server
+  become: yes
+
+  roles:
+    - role: mount-sp2
