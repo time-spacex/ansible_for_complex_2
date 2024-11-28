@@ -1,0 +1,22 @@
+[
+  {
+    "host": {{ RMOPK_server_IP }},
+    "services": [
+      {
+        "name": "RMOPK1",
+        "application": "RMO-PK",
+        "port": 7700
+      }
+    ]
+  },
+  {
+    "host": {{ management_server_IP }},
+    "services": [
+      {
+        "name": "MEDIATOR",
+        "application": "guidance_conveyor",
+        "port": 7950
+      }
+    ]
+  }
+]

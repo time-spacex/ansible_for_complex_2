@@ -1,0 +1,25 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for mounrt-shared-dir
+- name: Copy exports to /etc/exports
+  copy: src=exports dest=/etc/exports mode=0555
+
+- name: Check if directory /opt/krtm2/libs exists
+  ansible.builtin.stat:
+    path: /opt/krtm2/libs
+  register: libs_dir_stat
+
+- name: Create /opt/krtm2/libs if it does not exist
+  become: true
+  ansible.builtin.file:
+    path: /opt/krtm2/libs
+    state: directory
+  when: not libs_dir_stat.stat.exists
+
+- name: Export NFS shares
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      sudo exportfs -a
+      sudo systemctl restart nfs-kernel-server.service
+  when: libs_dir_stat.stat.exists

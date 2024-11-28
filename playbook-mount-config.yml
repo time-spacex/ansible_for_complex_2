@@ -1,0 +1,6 @@
+- name: Mount configs on a management server
+  hosts: management_server
+  become: yes
+
+  roles:
+    - role: mount-config

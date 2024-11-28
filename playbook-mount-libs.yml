@@ -1,0 +1,6 @@
+- name: Mount shared libs_dir on a libs server
+  hosts: libs_server
+  become: yes
+
+  roles:
+    - role: mount-shared-dir

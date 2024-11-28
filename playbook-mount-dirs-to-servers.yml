@@ -1,0 +1,13 @@
+- name: Mount shared libs_dir on a libs server
+  hosts: servers_for_mounting_libs
+  become: yes
+
+  roles:
+    - role: mount-dirs-all
+
+- name: Mount config to all servers
+  hosts: servers_for_mounting_configs
+  become: yes
+
+  roles:
+    - role: mount-config-to-servers

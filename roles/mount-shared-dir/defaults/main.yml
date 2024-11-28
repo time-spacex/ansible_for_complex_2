@@ -1,0 +1,5 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for mounrt-shared-dir
+
+destination_file: /etc/exports

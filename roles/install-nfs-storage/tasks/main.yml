@@ -1,0 +1,12 @@
+---
+- name: Install nfs kernel
+  become: true
+  ansible.builtin.apt:
+    name: nfs-kernel-server
+    state: latest
+
+- name: Start nfs server
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      sudo systemctl start nfs-kernel-server.service

@@ -1,0 +1,32 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for mount-config
+
+- name: Copy exports to /etc/exports
+  copy: src=exports dest=/etc/exports mode=0555
+
+- name: Check if directory /opt/krtm2/config exists
+  ansible.builtin.stat:
+    path: /opt/krtm2/config
+  register: libs_dir_stat
+
+- name: Create /opt/krtm2/config if it does not exist
+  become: true
+  ansible.builtin.file:
+    path: /opt/krtm2/config
+    state: directory
+  when: not libs_dir_stat.stat.exists
+
+- name: Generate config file for conveyor
+  template: src=gdnc_config_stage_1_2_3.json.j2 dest=/opt/krtm2/config/gdnc_config_stage_1_2_3.json
+
+- name: Generate config for RMOPK
+  template: src=gdnc_config_rmopk.json.j2 dest=/opt/krtm2/config/gdnc_config_rmopk.json
+
+- name: Export NFS shares
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      sudo exportfs -a
+      sudo systemctl restart nfs-kernel-server.service
+  when: libs_dir_stat.stat.exists

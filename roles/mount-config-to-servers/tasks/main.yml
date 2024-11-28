@@ -1,0 +1,33 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for mount-config-to-servers
+- name: Install nfs common
+  become: true
+  ansible.builtin.apt:
+    name: nfs-common
+    state: latest
+
+- name: Check if directory /opt/krtm2/config exists
+  ansible.builtin.stat:
+    path: /opt/krtm2/config
+  register: config_dir_stat
+
+- name: Create /opt/krtm2/config if it does not exist
+  become: true
+  ansible.builtin.file:
+    path: /opt/krtm2/config
+    state: directory
+  when: not config_dir_stat.stat.exists
+
+- name: Mount directory from libs server
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      sudo mkdir /opt/krtm2/config
+      sudo mount {{ management_server_IP }}:/opt/krtm2/config /opt/krtm2/config
+
+- name: Ensure NFS entry exists in /etc/fstab
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    line: "{{ management_server_IP }}:/opt/krtm2/config /opt/krtm2/config nfs auto 0 0"

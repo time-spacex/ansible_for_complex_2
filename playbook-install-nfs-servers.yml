@@ -1,0 +1,13 @@
+- name: Install nfs server and start
+  hosts: preprod_servers_shared
+  become: yes
+
+  roles:
+    - role: install-nfs-server
+
+- name: Install nfs to storage server and start
+  hosts: storage_server
+  become: yes
+
+  roles:
+    - role: install-nfs-storage

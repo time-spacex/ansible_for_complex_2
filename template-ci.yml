@@ -1,0 +1,66 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  PROG_NAME: libdsp
+
+
+.build:
+  stage: build
+  artifacts:
+    untracked: true
+    paths:
+      - linux-build/
+    expire_in: 1 hour
+  script:
+    - git submodule init && git submodule update
+    - mkdir linux-build && cd linux-build
+    - cmake -DCMAKE_PREFIX_PATH=/home/dev/Qt/6.7.1/gcc_64/  .. && make -j1 && make install
+
+build-dev:
+  extends: .build
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - if: $CI_COMMIT_REF_NAME == "develop"
+  tags: [lib]
+
+build-prePROD:
+  extends: .build
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - if: $CI_COMMIT_REF_NAME == "prePROD"
+  tags:
+    - lib
+    - prePROD
+
+
+.deploy:
+  stage: deploy
+  when: on_success
+  script:
+    - sudo rsync -arv --exclude={CMakeCache.txt,CMakeFiles,cmake_install.cmake,Makefile,*_autogen,*.log,*.ini} ../lib/ /opt/krtm2/libs/lib/
+    - sudo rsync -arv --exclude={CMakeCache.txt,CMakeFiles,cmake_install.cmake,Makefile,*_autogen,*.log,*.ini} ../include/ /opt/krtm2/libs/include/
+    # - sudo chown -R user:user /opt/*
+
+deploy-dev:
+  extends: .deploy
+  needs: [build-dev]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - if: $CI_COMMIT_REF_NAME == "develop"
+  tags: [lib]
+
+deploy-preProd:
+  extends: .deploy
+  needs: [build-prePROD]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - if: $CI_COMMIT_REF_NAME == "prePROD"
+  tags:
+    - lib
+    - prePROD

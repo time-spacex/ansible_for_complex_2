@@ -1,0 +1,8 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for mount-config
+
+# management_server_IP: "172.31.2.4"
+# UPNKI_server_IP: "172.31.2.6"
+# BSN_server_IP: "172.31.2.9"
+# MOPK_server_IP: "172.31.2.15"

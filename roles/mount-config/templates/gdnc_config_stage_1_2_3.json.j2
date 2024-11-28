@@ -1,0 +1,117 @@
+[
+  {
+    "host": {{ management_server_IP }},
+    "services": [
+      {
+        "name": "TASKS_STARTER",
+        "application": "task_starter_module",
+        "port": 8000
+      },
+      {
+        "name": "GUIDANCE_CONTROL",
+        "application": "GuidanceControl",
+        "port": 8200
+      },
+      {
+        "name": "MEDIATOR",
+        "application": "guidance_conveyor",
+        "port": 7950
+      }
+    ]
+  },
+  {
+    "host": {{ UPNKI_server_IP }},
+    "services": [
+      {
+        "name": "FFT_PANORAM_L",
+        "application": "fft",
+        "port": 8450
+      },
+      {
+        "name": "FFT_PANORAM_S",
+        "application": "fft",
+        "port": 8460
+      },
+      {
+        "name": "FFT_PANORAM_X",
+        "application": "fft",
+        "port": 8470
+      },
+      {
+        "name": "CAPTURE_PANORAM_L",
+        "application": "ac_receiver",
+        "port": 8350
+      },
+      {
+        "name": "CAPTURE_PANORAM_S",
+        "application": "ac_receiver",
+        "port": 8360
+      },
+      {
+        "name": "CAPTURE_PANORAM_X",
+        "application": "ac_receiver",
+        "port": 8370
+      },
+      {
+        "name": "SPECTRUM_SIGNAL_DETECTION_L",
+        "application": "spectrumSignalDetection",
+        "port": 8500
+      },
+      {
+        "name": "SPECTRUM_SIGNAL_DETECTION_S",
+        "application": "spectrumSignalDetection",
+        "port": 8510
+      },
+      {
+        "name": "SPECTRUM_SIGNAL_DETECTION_X",
+        "application": "spectrumSignalDetection",
+        "port": 8520
+      },
+      {
+        "name": "DDZ_RECORDER_L",
+        "application": "ddz_recorder",
+        "port": 8400
+      },
+      {
+        "name": "DDZ_RECORDER_S",
+        "application": "ddz_recorder",
+        "port": 8410
+      },
+      {
+        "name": "DDZ_RECORDER_X",
+        "application": "ddz_recorder",
+        "port": 8420
+      }
+    ]
+  },
+  {
+    "host": {{ BSN_server_IP }},
+    "services": [
+      {
+        "name": "DEVIATIONS_RECEIVER",
+        "application": "DR",
+        "port": 8250
+      },
+      {
+        "name": "SIMULATOR_GUIDANCE_RECEIVERS",
+        "application": "emuSDR",
+        "port": 8300
+      },
+      {
+        "name": "OPY_CONTROL",
+        "application": "OPY_Control",
+        "port": 8100
+      },
+      {
+        "name": "OPU_IMITATOR",
+        "application": "emitatorOPU",
+        "port": 8150
+      },
+      {
+        "name": "TRAJECTORY_PREDICTION",
+        "application": "TrajectoryPrediction",
+        "port": 8050
+      }
+    ]
+  }
+]
